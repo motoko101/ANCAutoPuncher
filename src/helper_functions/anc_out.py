@@ -270,7 +270,63 @@ def ReadEditMultipleANC8(filename, edit):
 	output=TruncateEditMultiple(output,edit)
 	
 	return output
-
+#-----------------------------------------------------------------------------
+def ReadEditSingleANC8(filename, edit, NOTRUNCATE="false"):
+# Function to read the selected edit.
+# Use for edits that appear only once.
+# Takes and edit and ANC output filepath as input.
+# Skip split and truncation if NOTRUNCATE is different than false.
+#
+	# Variable dictionarty
+	# ========================================================
+	# Input:
+	# =======
+	# filename, f	: input file
+	# edit			: name of an ANC9 edit
+	#s
+	# In code:
+	# =======
+	# flag 			: flag to start reading from file
+	#
+	# Output: 
+	# =======
+	# output 		: an output arrays of string
+	# 
+	
+	# iniitalize variables
+	flag = 0
+	output = list()
+	edit_end = " E-END"
+	
+	# ========================================================
+	# open ANC9 output file
+	try:
+		f = open(filename, "r")
+	except IOError:
+		print("Could not open file")
+		f.close()
+		return 0
+	
+	# ========================================================	
+	# read line by line
+	for line in f:
+		#check if the line begins with ANC edit
+		if line.startswith(edit):
+			flag = 1
+			
+		if flag==1:
+			output.append(line)
+			
+			if line.startswith(edit_end):
+				break
+	
+	if (NOTRUNCATE == "false"):
+		# truncate and split the edit as needed
+		output=TruncateEdit(output,edit)
+	else:
+		output=output
+		
+	return output
 #-----------------------------------------------------------------------------
 def TruncateEdit(output,edit):
 # Function to truncate edit read by ReadEdit function. (Single edit)
